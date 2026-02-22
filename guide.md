@@ -252,7 +252,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO reader;
 ### 4.3 Test the read-only user
 
 ```bash
-PGPASSWORD='Reader123!' psql -U reader -d testdb
+PGPASSWORD='Reader123!' psql -h 127.0.0.1 -U reader -d testdb
 ```
 
 ```sql
@@ -276,6 +276,7 @@ sudo -u postgres psql
 \c testdb
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM reader;
 \c postgres
+REVOKE ALL ON DATABASE testdb FROM reader;
 DROP USER reader;
 \q
 ```
