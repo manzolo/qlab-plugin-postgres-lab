@@ -140,7 +140,7 @@ write_files:
         \033[1;33mpgAdmin (web interface):\033[0m
           Inside VM:  \033[0;32mhttp://localhost/pgadmin4/\033[0m
           From host:  \033[0;32mhttp://localhost:<HTTP_PORT>/pgadmin4/\033[0m
-          Login:      \033[1;36mlabuser@lab.local\033[0m / \033[1;36mlabpass\033[0m
+          Login:      \033[1;36mlabuser@lab.example.com\033[0m / \033[1;36mlabpass\033[0m
 
         \033[1;33mFrom the host:\033[0m  run \033[0;32mqlab ports\033[0m to see port numbers
           PostgreSQL: \033[0;32mpsql -h 127.0.0.1 -p <PG_PORT> -U labuser -d testdb\033[0m
@@ -190,7 +190,7 @@ write_files:
       apt-get update
       apt-get install -y pgadmin4-web
       # Configure pgAdmin4 non-interactively
-      export PGADMIN_SETUP_EMAIL="labuser@lab.local"
+      export PGADMIN_SETUP_EMAIL="labuser@lab.example.com"
       export PGADMIN_SETUP_PASSWORD="labpass"
       /usr/pgadmin4/bin/setup-web.sh --yes
       # Confirm the user account (pgAdmin 9.x does not auto-confirm)
@@ -329,7 +329,7 @@ echo "    URL:   http://localhost:${PGADMIN_PORT}/pgadmin4/"
 else
 echo "    URL:   http://localhost:<port>/pgadmin4/"
 fi
-echo "    Login: labuser@lab.local / labpass"
+echo "    Login: labuser@lab.example.com / labpass"
 echo "  ---------------------------------------------"
 echo ""
 echo "  Active ports:  qlab ports"
