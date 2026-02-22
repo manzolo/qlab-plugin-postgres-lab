@@ -204,6 +204,7 @@ runcmd:
     PG_CONF=$(find /etc/postgresql -name postgresql.conf | head -1)
     PG_HBA=$(find /etc/postgresql -name pg_hba.conf | head -1)
     sed -i "s/^#\?listen_addresses.*/listen_addresses = '*'/" "$PG_CONF"
+    sed -i "s/scram-sha-256/md5/g" "$PG_HBA"
     echo "host    all             all             0.0.0.0/0               md5" >> "$PG_HBA"
     systemctl restart postgresql
   - |

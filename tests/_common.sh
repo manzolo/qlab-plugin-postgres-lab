@@ -66,7 +66,7 @@ psql_query_db() { ssh_vm "PGPASSWORD=labpass psql -U labuser -d $1 -t -A -c \"$2
 
 cleanup_postgres() {
     log_info "Cleaning up postgres test artifacts..."
-    ssh_vm "PGPASSWORD=labpass psql -U labuser -d testdb -c \"DROP TABLE IF EXISTS students;\" 2>/dev/null; sudo -u postgres psql -c \"DROP DATABASE IF EXISTS testlab;\" 2>/dev/null; sudo -u postgres psql -c \"DROP USER IF EXISTS reader;\" 2>/dev/null; rm -f /tmp/testdb_backup.sql" 2>/dev/null || true
+    ssh_vm "PGPASSWORD=labpass psql -U labuser -d testdb -c \"DROP TABLE IF EXISTS students;\" 2>/dev/null; sudo -u postgres psql -d testdb -c \"REVOKE ALL ON ALL TABLES IN SCHEMA public FROM reader;\" 2>/dev/null; sudo -u postgres psql -c \"DROP DATABASE IF EXISTS testlab;\" 2>/dev/null; sudo -u postgres psql -c \"DROP USER IF EXISTS reader;\" 2>/dev/null; rm -f /tmp/testdb_backup.sql" 2>/dev/null || true
 }
 
 report_results() {

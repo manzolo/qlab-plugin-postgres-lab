@@ -11,7 +11,7 @@ ssh_vm "sudo -u postgres psql -c 'CREATE DATABASE testlab OWNER labuser;'" >/dev
 psql_query_db testlab "CREATE TABLE IF NOT EXISTS students (id SERIAL PRIMARY KEY, name VARCHAR(100), grade INT);" >/dev/null
 psql_query_db testlab "INSERT INTO students (name, grade) VALUES ('Alice', 90);" >/dev/null
 
-created=$(ssh_vm "PGPASSWORD=labpass psql -U labuser -t -A -c \"SELECT datname FROM pg_database WHERE datname='testlab';\"")
+created=$(ssh_vm "PGPASSWORD=labpass psql -U labuser -d testdb -t -A -c \"SELECT datname FROM pg_database WHERE datname='testlab';\"")
 assert_contains "Database testlab created" "$created" "testlab"
 
 data=$(psql_query_db testlab "SELECT name FROM students;")
