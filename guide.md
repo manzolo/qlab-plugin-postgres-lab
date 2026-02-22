@@ -29,7 +29,7 @@ cloud-init status --wait
 - **SSH:** `labuser` / `labpass`
 - **PostgreSQL:** `labuser` / `labpass` (full access to `testdb`)
 - **PostgreSQL superuser:** via `sudo -u postgres psql` (peer authentication)
-- **pgAdmin:** `labuser@lab.local` / `labpass`
+- **pgAdmin:** `labuser@lab.example.com` / `labpass`
 
 ## Ports
 

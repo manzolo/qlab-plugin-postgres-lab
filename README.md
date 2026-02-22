@@ -29,7 +29,7 @@ A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine wi
 - **SSH Password:** `labpass`
 - **PostgreSQL superuser:** `sudo -u postgres psql` (peer auth, no password)
 - **PostgreSQL labuser:** `labuser` / `labpass` (has privileges on `testdb`)
-- **pgAdmin:** `labuser@lab.local` / `labpass`
+- **pgAdmin:** `labuser@lab.example.com` / `labpass`
 
 ## Ports
 
