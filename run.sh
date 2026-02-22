@@ -195,13 +195,13 @@ write_files:
       /usr/pgadmin4/bin/setup-web.sh --yes
       # Confirm the user account (pgAdmin 9.x does not auto-confirm)
       python3 -c "
-import sqlite3, datetime
-conn = sqlite3.connect('/var/lib/pgadmin/pgadmin4.db')
-c = conn.cursor()
-c.execute('UPDATE user SET confirmed_at = ? WHERE confirmed_at IS NULL', (datetime.datetime.now().isoformat(),))
-conn.commit()
-conn.close()
-"
+      import sqlite3, datetime
+      conn = sqlite3.connect('/var/lib/pgadmin/pgadmin4.db')
+      c = conn.cursor()
+      c.execute('UPDATE user SET confirmed_at = ? WHERE confirmed_at IS NULL', (datetime.datetime.now().isoformat(),))
+      conn.commit()
+      conn.close()
+      "
 runcmd:
   - chmod -x /etc/update-motd.d/*
   - sed -i 's/^#\?PrintMotd.*/PrintMotd yes/' /etc/ssh/sshd_config
