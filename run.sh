@@ -137,15 +137,16 @@ write_files:
           \033[0;32mpg_dump -U labuser testdb > backup.sql\033[0m
           \033[0;32mpsql -U labuser testdb < backup.sql\033[0m
 
-        \033[1;33mpgAdmin:\033[0m
-          \033[0;32mhttp://localhost/pgadmin4/\033[0m           (inside VM)
-          Run \033[0;32mqlab ports\033[0m on the host to see the HTTP port
+        \033[1;33mpgAdmin (web interface):\033[0m
+          Inside VM:  \033[0;32mhttp://localhost/pgadmin4/\033[0m
+          From host:  \033[0;32mhttp://localhost:<HTTP_PORT>/pgadmin4/\033[0m
+          Login:      \033[1;36mlabuser@lab.local\033[0m / \033[1;36mlabpass\033[0m
 
-        \033[1;33mFrom the host:\033[0m
-          \033[0;32mpsql -h 127.0.0.1 -p <port> -U labuser -d testdb\033[0m
+        \033[1;33mFrom the host:\033[0m  run \033[0;32mqlab ports\033[0m to see port numbers
+          PostgreSQL: \033[0;32mpsql -h 127.0.0.1 -p <PG_PORT> -U labuser -d testdb\033[0m
+          pgAdmin:    \033[0;32mhttp://localhost:<HTTP_PORT>/pgadmin4/\033[0m
 
         \033[1;33mCredentials:\033[0m  \033[1;36mlabuser\033[0m / \033[1;36mlabpass\033[0m
-        \033[1;33mpgAdmin:\033[0m     \033[1;36mlabuser@lab.local\033[0m / \033[1;36mlabpass\033[0m
         \033[1;33mExit:\033[0m         type '\033[1;31mexit\033[0m'
 
       \033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m
@@ -299,37 +300,32 @@ echo "============================================="
 echo "  postgres-lab: VM is booting"
 echo "============================================="
 echo ""
-echo "  Credentials:"
-echo "    Username: labuser"
-echo "    Password: labpass"
+echo "  Credentials: labuser / labpass"
 echo ""
-echo "  Connect via SSH (wait ~90s for boot + package install):"
+echo "  SSH (wait ~90s for boot + package install):"
 echo "    qlab shell ${PLUGIN_NAME}"
 echo ""
-echo "  Connect to PostgreSQL (after boot completes):"
+echo "  PostgreSQL (after boot completes):"
 echo "    Inside VM:  sudo -u postgres psql"
 if [[ -n "$PG_PORT" ]]; then
 echo "    From host:  psql -h 127.0.0.1 -p ${PG_PORT} -U labuser -d testdb"
 else
-echo "    From host:  check PostgreSQL port with 'qlab ports', then:"
-echo "                psql -h 127.0.0.1 -p <port> -U labuser -d testdb"
+echo "    From host:  psql -h 127.0.0.1 -p <port> -U labuser -d testdb"
 fi
 echo ""
-echo "  pgAdmin (after boot completes):"
+echo "  ---------------------------------------------"
+echo "  pgAdmin (web interface):"
 if [[ -n "$PGADMIN_PORT" ]]; then
-echo "    http://localhost:${PGADMIN_PORT}/pgadmin4/"
+echo "    URL:   http://localhost:${PGADMIN_PORT}/pgadmin4/"
 else
-echo "    Check HTTP port with 'qlab ports', then:"
-echo "    http://localhost:<port>/pgadmin4/"
+echo "    URL:   http://localhost:<port>/pgadmin4/"
 fi
 echo "    Login: labuser@lab.local / labpass"
+echo "  ---------------------------------------------"
 echo ""
-echo "  View boot log:"
-echo "    qlab log ${PLUGIN_NAME}"
+echo "  Active ports:  qlab ports"
+echo "  View boot log: qlab log ${PLUGIN_NAME}"
+echo "  Stop VM:       qlab stop ${PLUGIN_NAME}"
 echo ""
-echo "  Stop VM:"
-echo "    qlab stop ${PLUGIN_NAME}"
-echo ""
-echo "  Tip: override resources with environment variables:"
-echo "    QLAB_MEMORY=4096 QLAB_DISK_SIZE=30G qlab run ${PLUGIN_NAME}"
+echo "  Tip: QLAB_MEMORY=4096 QLAB_DISK_SIZE=30G qlab run ${PLUGIN_NAME}"
 echo "============================================="
