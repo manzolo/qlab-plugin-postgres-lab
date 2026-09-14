@@ -2,122 +2,49 @@
 
 [![QLab Plugin](https://img.shields.io/badge/QLab-Plugin-blue)](https://github.com/manzolo/qlab)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey)](https://github.com/manzolo/qlab)
+[![Walkthrough](https://img.shields.io/badge/walkthrough-EN%20%26%20IT-informational)](docs/walkthrough-en.pdf)
 
-A [QLab](https://github.com/manzolo/qlab) plugin that boots a virtual machine with PostgreSQL pre-installed, a sample database with test data, pgAdmin for web-based management, and port forwarding for host access.
+A single-VM [QLab](https://github.com/manzolo/qlab) lab with PostgreSQL and a web pgAdmin,
+a sample database, and both ports forwarded to the host — for learning SQL, roles and
+privileges, and backups by running them.
 
-## Objectives
-
-- Learn how to connect to PostgreSQL and explore databases
-- Create databases, tables, and run SQL queries
-- Manage users and permissions
-- Perform backups and restores with pg_dump
-- Access PostgreSQL from the host via port forwarding
-- Use pgAdmin for web-based database management
-
-## How It Works
-
-1. **Cloud image**: Downloads a minimal Ubuntu 22.04 cloud image (~250MB)
-2. **Cloud-init**: Creates `user-data` with PostgreSQL installation and sample data setup
-3. **ISO generation**: Packs cloud-init files into a small ISO (cidata)
-4. **Overlay disk**: Creates a COW disk on top of the base image (original stays untouched)
-5. **QEMU boot**: Starts the VM in background with SSH, PostgreSQL, and HTTP port forwarding
-
-## Credentials
-
-- **SSH Username:** `labuser`
-- **SSH Password:** `labpass`
-- **PostgreSQL superuser:** `sudo -u postgres psql` (peer auth, no password)
-- **PostgreSQL labuser:** `labuser` / `labpass` (has privileges on `testdb`)
-- **pgAdmin:** `labuser@lab.example.com` / `labpass`
-
-## Ports
-
-| Service    | Host Port | VM Port |
-|------------|-----------|---------|
-| SSH        | dynamic   | 22      |
-| PostgreSQL | dynamic   | 5432    |
-| pgAdmin    | dynamic   | 80      |
-
-> All host ports are dynamically allocated. Use `qlab ports` to see the actual mappings.
-
-## Walkthrough
-
-`docs/` holds an illustrated account of a real run — every block of output in it
-was captured while the lab was running, not written by hand.
-
-| English | Italiano |
-|---|---|
-| [`docs/walkthrough-en.pdf`](docs/walkthrough-en.pdf) | [`docs/walkthrough-it.pdf`](docs/walkthrough-it.pdf) |
+## Quick start
 
 ```bash
-# from the qlab checkout
-python3 tools/walkthrough/build.py ../qlab-plugin-postgres-lab        # English
-python3 tools/walkthrough/build.py ../qlab-plugin-postgres-lab -it    # Italian
-python3 tools/walkthrough/build.py ../qlab-plugin-postgres-lab --live # re-capture first
-```
-
-## Usage
-
-```bash
-# Install the plugin
 qlab install postgres-lab
-
-# Run the lab
-qlab run postgres-lab
-
-# Wait ~90s for boot and package installation, then:
-
-# Connect via SSH
-qlab shell postgres-lab
-
-# Inside the VM:
-sudo -u postgres psql                           # connect as superuser
-psql -U labuser -d testdb                       # connect as labuser
-SELECT * FROM users;                            # query sample data
-
-# From the host (check PostgreSQL port with 'qlab ports'):
-psql -h 127.0.0.1 -p <pg_port> -U labuser -d testdb
-
-# Stop the VM
+qlab run postgres-lab       # boots 1 VM (~60s)
+qlab shell postgres-lab     # log in: labuser / labpass
+qlab test postgres-lab      # run the automated checks
 qlab stop postgres-lab
 ```
 
-## Exercises
+Inside the VM: `sudo -u postgres psql` (superuser) or `psql -U labuser -d testdb`.
+From the host: pgAdmin in a browser, or `psql -h 127.0.0.1 -p <port> -U labuser testdb`
+— find the ports with `qlab ports`.
 
-> **New to PostgreSQL?** See the [Step-by-Step Guide](guide.md) for complete walkthroughs with full SQL examples.
+## What's inside
 
-| # | Exercise | What you'll do |
-|---|----------|----------------|
-| 1 | **PostgreSQL Anatomy** | Explore PostgreSQL installation, connect, and navigate databases |
-| 2 | **SQL Queries** | Run SELECT, WHERE, ORDER BY, JOIN on sample data |
-| 3 | **Data Manipulation** | INSERT, UPDATE, DELETE rows and manage tables |
-| 4 | **Users and Privileges** | Create users, GRANT/REVOKE permissions |
-| 5 | **Database Administration** | Backup with pg_dump, restore, check status |
-| 6 | **Security and Configuration** | Review listen_addresses, pg_hba.conf, and logging |
+| # | Exercise | What you do |
+|---|----------|-------------|
+| 1 | PostgreSQL anatomy | connect, explore databases, navigate the server |
+| 2 | SQL queries | `SELECT` / `WHERE` / `ORDER BY` / `JOIN` on sample data |
+| 3 | Data manipulation | `INSERT` / `UPDATE` / `DELETE`, manage tables |
+| 4 | Roles & privileges | create roles, `GRANT` / `REVOKE` |
+| 5 | Administration | backup with `pg_dump`, restore, check status |
+| 6 | Security & config | `listen_addresses`, `pg_hba.conf`, logging |
 
-## Automated Tests
+## Access
 
-An automated test suite validates the exercises against a running VM:
+| | |
+|---|---|
+| **SSH** | `labuser` / `labpass` |
+| **PostgreSQL superuser** | `sudo -u postgres psql` (peer auth) |
+| **PostgreSQL user** | `labuser` / `labpass`, privileges on `testdb` |
+| **pgAdmin** | `labuser@lab.example.com` / `labpass` |
+| **Ports** | SSH + PostgreSQL (5432) + pgAdmin, dynamically allocated — see `qlab ports` |
 
-```bash
-# Start the lab first
-qlab run postgres-lab
-# Wait ~90s for cloud-init, then run all tests
-qlab test postgres-lab
-```
+## Learn more
 
-## Resetting
-
-To start fresh, stop and re-run:
-
-```bash
-qlab stop postgres-lab
-qlab run postgres-lab
-```
-
-Or reset the entire workspace:
-
-```bash
-qlab reset
-```
+- 📖 **[Step-by-step guide](guide.md)** — every exercise with full SQL and expected output
+- 📄 **Illustrated walkthrough** — a real run, captured live: **[English](docs/walkthrough-en.pdf)** · **[Italiano](docs/walkthrough-it.pdf)**
+- 🧩 **[QLab](https://github.com/manzolo/qlab)** — the plugin runner: how install, overlays and cloud-init work
