@@ -1,0 +1,16 @@
+Every row carries the transaction that created it and the one that deleted it.
+ xmin | xmax | id |  name   
+------+------+----+---------
+  737 |  739 |  1 | Alice
+  737 |  739 |  2 | Bob
+  737 |  739 |  3 | Charlie
+(3 rows)
+
+$ after an UPDATE, xmin changes: the old row version is still there until VACUUM
+ xmin | xmax | id |  name   
+------+------+----+---------
+  761 |    0 |  1 | Alice
+  737 |  739 |  2 | Bob
+  737 |  739 |  3 | Charlie
+(3 rows)
+

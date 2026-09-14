@@ -1,0 +1,92 @@
+[INFO] Running tests for plugin 'postgres-lab'...
+
+
+=========================================
+  postgres-lab — Automated Test Suite
+=========================================
+
+  [INFO] Workspace: /home/manzolo/Workspaces/qemu/qlab/qlab
+  [INFO] Server port: 2225
+  [INFO] Checking VM connectivity...
+  [PASS] VM is reachable via SSH
+  [INFO] Checking cloud-init status...
+  [PASS] Cloud-init is done
+  [INFO] Checking PostgreSQL is ready...
+  [PASS] PostgreSQL is running
+  [INFO] Cleaning up postgres test artifacts...
+DROP TABLE
+DROP DATABASE
+DROP ROLE
+
+Exercise 1 — PostgreSQL Anatomy
+
+  [PASS] PostgreSQL service is active
+  [PASS] testdb database exists
+  [PASS] users table exists
+  [PASS] orders table exists
+  [PASS] PostgreSQL version is available
+  [PASS] users table has data
+
+  Exercise 1: All 6 checks passed
+
+Exercise 2 — SQL Queries
+
+  [PASS] SELECT * returns data
+  [PASS] WHERE clause filters correctly
+  [PASS] ORDER BY returns results
+  [PASS] JOIN returns combined results
+  [PASS] COUNT aggregate works
+  [PASS] SUM aggregate works
+
+  Exercise 2: All 6 checks passed
+
+Exercise 3 — Data Manipulation
+
+  [PASS] INSERT adds a row
+  [PASS] UPDATE modifies data
+  [PASS] DELETE removes the row
+  [PASS] ROLLBACK undoes INSERT
+  [PASS] COMMIT persists INSERT
+
+  Exercise 3: All 5 checks passed
+
+Exercise 4 — Users and Privileges
+
+  [PASS] Read-only user can SELECT
+  [PASS] Read-only user cannot INSERT
+
+  Exercise 4: All 2 checks passed
+
+Exercise 5 — Database Administration
+
+  [PASS] Database testlab created
+  [PASS] Table has data
+  [PASS] ALTER TABLE added email column
+  [PASS] Index created
+  [PASS] pg_dump works
+  [PASS] Backup file exists
+
+  Exercise 5: All 6 checks passed
+
+Exercise 6 — Security and Configuration
+
+  [PASS] PostgreSQL config directory exists
+  [PASS] postgresql.conf exists
+  [PASS] listen_addresses is configured
+  [PASS] Server version is queryable
+  [PASS] max_connections is queryable
+  [PASS] pg_stat_activity is queryable
+  [PASS] PostgreSQL port 5432 is listening
+
+  Exercise 6: All 7 checks passed
+
+=========================================
+  Final Report
+=========================================
+
+  Exercises run:     6
+  Exercises passed:  6
+  Exercises failed:  0
+  Exercises skipped: 0
+
+  All exercises passed!

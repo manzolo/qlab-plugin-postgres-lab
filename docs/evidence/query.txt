@@ -1,0 +1,19 @@
+$ SELECT u.name, COUNT(o.id) AS orders, SUM(o.amount) AS spent ...
+  name   | orders |  spent  
+---------+--------+---------
+ Alice   |      2 | 1079.98
+ Charlie |      1 |  349.99
+ Bob     |      1 |   29.99
+(3 rows)
+
+$ EXPLAIN ANALYZE the same join
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ HashAggregate  (cost=29.85..32.47 rows=210 width=154) (actual time=0.030..0.031 rows=3 loops=1)
+   Group Key: u.id
+   Batches: 1  Memory Usage: 40kB
+   ->  Hash Right Join  (cost=14.72..28.40 rows=290 width=138) (actual time=0.020..0.023 rows=4 loops=1)
+         Hash Cond: (o.user_id = u.id)
+         ->  Seq Scan on orders o  (cost=0.00..12.90 rows=290 width=20) (actual time=0.001..0.002 rows=4 loops=1)
+         ->  Hash  (cost=12.10..12.10 rows=210 width=122) (actual time=0.009..0.009 rows=3 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB

@@ -1,0 +1,7 @@
+postgres    4832 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+postgres    4834 postgres: 14/main: checkpointer 
+postgres    4835 postgres: 14/main: background writer 
+postgres    4836 postgres: 14/main: walwriter 
+postgres    4837 postgres: 14/main: autovacuum launcher 
+postgres    4838 postgres: 14/main: stats collector 
+postgres    4839 postgres: 14/main: logical replication launcher 

@@ -1,0 +1,52 @@
+# postgres-lab — what the walkthrough builder captures from a running lab.
+# The test suite runs first, so what follows shows the lab exercised.
+
+evidence:
+  - id: qlab-test
+    cmd: qlab test postgres-lab 2>&1 || true
+  - id: version
+    vm: postgres-lab
+    cmd: 'psql --version; systemctl is-active postgresql; pg_lsclusters 2>/dev/null'
+  - id: processes
+    vm: postgres-lab
+    cmd: ps -o user,pid,cmd --no-headers -u postgres | head -10
+  - id: listening
+    vm: postgres-lab
+    cmd: sudo ss -tlnpH 'sport = :5432' | awk '{print $1, $4}'
+  - id: databases
+    vm: postgres-lab
+    cmd: sudo -u postgres psql -c '\l'
+  - id: schema
+    vm: postgres-lab
+    cmd: |
+      sudo -u postgres psql -d testdb -c '\dt'
+      sudo -u postgres psql -d testdb -c '\d orders'
+  - id: query
+    vm: postgres-lab
+    cmd: |
+      echo '$ SELECT u.name, COUNT(o.id) AS orders, SUM(o.amount) AS spent ...'
+      sudo -u postgres psql -d testdb -c "SELECT u.name, COUNT(o.id) AS orders, COALESCE(SUM(o.amount),0) AS spent FROM users u LEFT JOIN orders o ON o.user_id = u.id GROUP BY u.id, u.name ORDER BY spent DESC;"
+      echo '$ EXPLAIN ANALYZE the same join'
+      sudo -u postgres psql -d testdb -c "EXPLAIN ANALYZE SELECT u.name, SUM(o.amount) FROM users u LEFT JOIN orders o ON o.user_id = u.id GROUP BY u.id, u.name;" | head -10
+  - id: roles
+    vm: postgres-lab
+    cmd: sudo -u postgres psql -c '\du'
+  - id: hba
+    vm: postgres-lab
+    cmd: sudo grep -vE '^\s*#|^\s*$' /etc/postgresql/*/main/pg_hba.conf
+  - id: peer-vs-md5
+    vm: postgres-lab
+    cmd: |
+      echo '$ sudo -u postgres psql -c "SELECT current_user"    (unix socket, peer auth)'
+      sudo -u postgres psql -tAc 'SELECT current_user, inet_server_addr() IS NULL AS over_socket;'
+      echo
+      echo '$ psql -h 127.0.0.1 -U labuser testdb   (TCP, password auth)'
+      PGPASSWORD=labpass psql -h 127.0.0.1 -U labuser -d testdb -tAc 'SELECT current_user, inet_server_addr();' 2>&1 | tail -2
+  - id: mvcc
+    vm: postgres-lab
+    cmd: |
+      echo 'Every row carries the transaction that created it and the one that deleted it.'
+      sudo -u postgres psql -d testdb -c 'SELECT xmin, xmax, id, name FROM users ORDER BY id;'
+      echo '$ after an UPDATE, xmin changes: the old row version is still there until VACUUM'
+      sudo -u postgres psql -d testdb -c "UPDATE users SET email = email WHERE id = 1;" >/dev/null 2>&1
+      sudo -u postgres psql -d testdb -c 'SELECT xmin, xmax, id, name FROM users ORDER BY id;'

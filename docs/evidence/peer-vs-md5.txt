@@ -1,0 +1,5 @@
+$ sudo -u postgres psql -c "SELECT current_user"    (unix socket, peer auth)
+postgres|t
+
+$ psql -h 127.0.0.1 -U labuser testdb   (TCP, password auth)
+labuser|127.0.0.1
